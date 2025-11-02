@@ -103,8 +103,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         // Display global icons from profile.json
+        const linksContainer = document.getElementById('links-container');
+        let hasIcons = false;
+        
         if (profileData.icons && Array.isArray(profileData.icons) && profileData.icons.length > 0) {
-            const container = document.getElementById('links-container');
+            hasIcons = true;
             const iconsRow = document.createElement('div');
             iconsRow.style.display = 'flex';
             iconsRow.style.gap = '15px';
@@ -137,36 +140,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 iconsRow.appendChild(iconLink);
             });
             
-            container.insertBefore(iconsRow, container.firstChild);
+            linksContainer.appendChild(iconsRow);
         }
 
 
 
-        // Load links
-        const linksContainer = document.getElementById('links-container');
-        // Only clear if we haven't already added icons
-        const existingIcons = linksContainer.querySelector('div[style*="gap: 15px"]');
-        if (!existingIcons) {
-            linksContainer.innerHTML = '';
-        }
-
-
-        if (profileData.links && profileData.links.length > 0) {
-            profileData.links.forEach(link => {
-                const linkCard = createLinkCard(link.label, link.url, link.imageUrl);
-                linksContainer.appendChild(linkCard);
-            });
-        } else {
-            // Default links
-            const defaultLinks = [
-                { label: 'GitHub', url: 'https://github.com/', icon: '' },
-                { label: 'Portfolio', url: '#', icon: '' },
-                { label: 'Email', url: 'mailto:', icon: '' }
-            ];
-            defaultLinks.forEach(link => {
-                const linkCard = createLinkCard(link.label, link.url, null, link.icon);
-                linksContainer.appendChild(linkCard);
-            });
+        // Load links ONLY if there are no icons (icons take priority)
+        if (!hasIcons) {
+            if (profileData.links && profileData.links.length > 0) {
+                profileData.links.forEach(link => {
+                    const linkCard = createLinkCard(link.label, link.url, link.imageUrl);
+                    linksContainer.appendChild(linkCard);
+                });
+            } else {
+                // Default links
+                const defaultLinks = [
+                    { label: 'GitHub', url: 'https://github.com/', icon: '🐙' },
+                    { label: 'Portfolio', url: '#', icon: '🌐' },
+                    { label: 'Email', url: 'mailto:', icon: '📧' }
+                ];
+                defaultLinks.forEach(link => {
+                    const linkCard = createLinkCard(link.label, link.url, null, link.icon);
+                    linksContainer.appendChild(linkCard);
+                });
+            }
         }
 
 
@@ -208,14 +205,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Get fallback icon for error case
             if (!fallbackIcon) {
                 const iconMap = {
-                    'GitHub': '',
-                    'Discord': '',
-                    'Roblox': '',
-                    'Portfolio': '',
-                    'Email': '',
-                    'Twitter': '',
-                    'LinkedIn': '',
-                    'Instagram': ''
+                    'GitHub': '🐙',
+                    'Discord': '💬',
+                    'Roblox': '🎮',
+                    'Portfolio': '🌐',
+                    'Email': '📧',
+                    'Twitter': '🐦',
+                    'LinkedIn': '💼',
+                    'Instagram': '📸'
                 };
                 fallbackIcon = iconMap[label] || '🔗';
             }
@@ -226,14 +223,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // No image, use emoji fallback
             if (!fallbackIcon) {
                 const iconMap = {
-                    'GitHub': '',
-                    'Discord': '',
-                    'Roblox': '',
-                    'Portfolio': '',
-                    'Email': '',
-                    'Twitter': '',
-                    'LinkedIn': '',
-                    'Instagram': ''
+                    'GitHub': '🐙',
+                    'Discord': '💬',
+                    'Roblox': '🎮',
+                    'Portfolio': '🌐',
+                    'Email': '📧',
+                    'Twitter': '🐦',
+                    'LinkedIn': '💼',
+                    'Instagram': '📸'
                 };
                 fallbackIcon = iconMap[label] || '🔗';
             }
