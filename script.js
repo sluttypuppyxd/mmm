@@ -159,9 +159,9 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Default links
             const defaultLinks = [
-                { label: 'GitHub', url: 'https://github.com/', icon: '🐙' },
-                { label: 'Portfolio', url: '#', icon: '🌐' },
-                { label: 'Email', url: 'mailto:', icon: '📧' }
+                { label: 'GitHub', url: 'https://github.com/', icon: '' },
+                { label: 'Portfolio', url: '#', icon: '' },
+                { label: 'Email', url: 'mailto:', icon: '' }
             ];
             defaultLinks.forEach(link => {
                 const linkCard = createLinkCard(link.label, link.url, null, link.icon);
