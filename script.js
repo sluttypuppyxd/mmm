@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-        // Display global icons from profile.json
+        // Display global icons from profile.json with clickable links
         const linksContainer = document.getElementById('links-container');
         let hasIcons = false;
         
@@ -115,9 +115,14 @@ document.addEventListener('DOMContentLoaded', function() {
             iconsRow.style.marginBottom = '20px';
             iconsRow.style.flexWrap = 'wrap';
             
-            profileData.icons.forEach((iconUrl) => {
+            profileData.icons.forEach((iconData) => {
                 const iconLink = document.createElement('a');
-                iconLink.href = '#';
+                // Handle both old format (string) and new format (object with url and image)
+                const iconUrl = typeof iconData === 'string' ? iconData : iconData.image;
+                const linkUrl = typeof iconData === 'string' ? '#' : (iconData.url || '#');
+                
+                iconLink.href = linkUrl;
+                iconLink.target = '_blank';
                 iconLink.className = 'icon-box';
                 iconLink.style.width = '50px';
                 iconLink.style.height = '50px';
@@ -433,6 +438,7 @@ style.textContent = `
     .icon-box {
         position: relative;
         overflow: hidden;
+        cursor: pointer;
     }
 
     .icon-box:hover {
