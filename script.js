@@ -208,14 +208,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Get fallback icon for error case
             if (!fallbackIcon) {
                 const iconMap = {
-                    'GitHub': '🐙',
-                    'Discord': '💬',
-                    'Roblox': '🎮',
-                    'Portfolio': '🌐',
-                    'Email': '📧',
-                    'Twitter': '🐦',
-                    'LinkedIn': '💼',
-                    'Instagram': '📸'
+                    'GitHub': '',
+                    'Discord': '',
+                    'Roblox': '',
+                    'Portfolio': '',
+                    'Email': '',
+                    'Twitter': '',
+                    'LinkedIn': '',
+                    'Instagram': ''
                 };
                 fallbackIcon = iconMap[label] || '🔗';
             }
@@ -226,14 +226,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // No image, use emoji fallback
             if (!fallbackIcon) {
                 const iconMap = {
-                    'GitHub': '🐙',
-                    'Discord': '💬',
-                    'Roblox': '🎮',
-                    'Portfolio': '🌐',
-                    'Email': '📧',
-                    'Twitter': '🐦',
-                    'LinkedIn': '💼',
-                    'Instagram': '📸'
+                    'GitHub': '',
+                    'Discord': '',
+                    'Roblox': '',
+                    'Portfolio': '',
+                    'Email': '',
+                    'Twitter': '',
+                    'LinkedIn': '',
+                    'Instagram': ''
                 };
                 fallbackIcon = iconMap[label] || '🔗';
             }
