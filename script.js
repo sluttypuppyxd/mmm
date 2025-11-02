@@ -66,27 +66,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const backgroundAudio = document.getElementById('background-audio');
         if (profileData.audioUrl && profileData.audioUrl.trim()) {
             const audioUrl = profileData.audioUrl.trim();
-
-
-            // Check if it's a YouTube URL
-            const youtubeMatch = audioUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
-
-
-            if (youtubeMatch) {
-                // It's a YouTube link - use YouTube iframe API
-                const videoId = youtubeMatch[1];
-                loadYouTubeAudio(videoId, true); // true = autoplay
-                audioPlayer.style.display = 'flex';
-            } else {
-                // Regular audio file
-                backgroundAudio.src = audioUrl;
-                audioPlayer.style.display = 'flex';
-                // Set volume from localStorage or default to 50%
-                const savedVolume = localStorage.getItem('audioVolume');
-                if (savedVolume) {
-                    backgroundAudio.volume = savedVolume / 100;
-                    document.getElementById('volume-slider').value = savedVolume;
-                }
+            
+            // Only treat as direct audio file (not YouTube)
+            backgroundAudio.src = audioUrl;
+            audioPlayer.style.display = 'flex';
+            
+            // Set volume from localStorage or default to 50%
+            const savedVolume = localStorage.getItem('audioVolume');
+            if (savedVolume) {
+                backgroundAudio.volume = savedVolume / 100;
+                document.getElementById('volume-slider').value = savedVolume;
             }
         }
 
@@ -123,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 iconLink.href = linkUrl;
                 iconLink.target = '_blank';
+                iconLink.rel = 'noopener noreferrer';
                 iconLink.className = 'icon-box';
                 iconLink.style.width = '50px';
                 iconLink.style.height = '50px';
@@ -133,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 iconLink.style.justifyContent = 'center';
                 iconLink.style.backgroundColor = 'rgba(255,255,255,0.1)';
                 iconLink.style.transition = 'all 0.3s ease';
+                iconLink.style.cursor = 'pointer';
                 
                 const img = document.createElement('img');
                 img.src = iconUrl;
@@ -466,137 +457,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 
 
-// YouTube API
-let youtubePlayer = null;
-let isYouTube = false;
-let pendingVideoId = null;
-
-
-
-function onYouTubeIframeAPIReady() {
-    // YouTube API is ready - create player if we have a pending video
-    if (pendingVideoId) {
-        const autoplay = window.pendingAutoplay || false;
-        createYouTubePlayer(pendingVideoId, autoplay);
-    }
-}
-
-
-
-function createYouTubePlayer(videoId, autoplay = false) {
-    const container = document.getElementById('youtube-player-container');
-    if (!container) return;
-
-
-    container.style.display = 'block';
-
-
-    try {
-        youtubePlayer = new YT.Player('youtube-player-container', {
-            height: '0',
-            width: '0',
-            videoId: videoId,
-            playerVars: {
-                'autoplay': autoplay ? 1 : 0,
-                'controls': 0,
-                'disablekb': 1,
-                'fs': 0,
-                'iv_load_policy': 3,
-                'modestbranding': 1,
-                'playsinline': 1,
-                'rel': 0,
-                'showinfo': 0,
-                'loop': 1,
-                'playlist': videoId
-            },
-            events: {
-                'onReady': function(event) {
-                    onPlayerReady(event);
-                    if (autoplay) {
-                        // Try to play after a short delay (browsers may block)
-                        setTimeout(() => {
-                            try {
-                                event.target.playVideo();
-                            } catch (e) {
-                                console.log('YouTube autoplay blocked by browser. User interaction required.');
-                            }
-                        }, 500);
-                    }
-                },
-                'onStateChange': onPlayerStateChange
-            }
-        });
-    } catch (e) {
-        console.error('Error creating YouTube player:', e);
-    }
-}
-
-
-
-function loadYouTubeAudio(videoId, autoplay = false) {
-    isYouTube = true;
-
-
-    if (typeof YT !== 'undefined' && YT.Player) {
-        // API is ready, create player
-        createYouTubePlayer(videoId, autoplay);
-
-
-        // Set initial volume after player is ready
-        setTimeout(() => {
-            if (youtubePlayer) {
-                const savedVolume = localStorage.getItem('audioVolume');
-                const volume = savedVolume ? parseInt(savedVolume) : 50;
-                youtubePlayer.setVolume(volume);
-                const volumeSlider = document.getElementById('volume-slider');
-                if (volumeSlider) volumeSlider.value = volume;
-            }
-        }, 2000);
-    } else {
-        // API not ready yet, store video ID and wait
-        pendingVideoId = videoId;
-        window.pendingAutoplay = autoplay;
-    }
-}
-
-
-
-function onPlayerReady(event) {
-    // Player is ready - set initial volume
-    const savedVolume = localStorage.getItem('audioVolume');
-    if (savedVolume) {
-        youtubePlayer.setVolume(parseInt(savedVolume));
-        const volumeSlider = document.getElementById('volume-slider');
-        if (volumeSlider) volumeSlider.value = savedVolume;
-    }
-}
-
-
-
-function onPlayerStateChange(event) {
-    const playIcon = document.getElementById('audio-play-icon');
-    const pauseIcon = document.getElementById('audio-pause-icon');
-
-
-    if (!playIcon || !pauseIcon) return;
-
-
-    if (event.data === YT.PlayerState.PLAYING) {
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'inline';
-    } else {
-        playIcon.style.display = 'inline';
-        pauseIcon.style.display = 'none';
-    }
-}
-
-
-
-// Make sure YouTube API callback is set
-window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
-
-
-
 // Audio player controls
 document.addEventListener('DOMContentLoaded', function() {
     const audioToggle = document.getElementById('audio-toggle');
@@ -609,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // ===== AUTOPLAY WITH MUTED TRICK =====
-    if (backgroundAudio && !isYouTube) {
+    if (backgroundAudio) {
         // Muted autoplay (browsers allow this)
         backgroundAudio.muted = true;
         backgroundAudio.play().then(() => {
@@ -625,30 +485,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    // YouTube autoplay unmute
-    if (isYouTube && youtubePlayer) {
-        setTimeout(() => {
-            try {
-                youtubePlayer.unMute();
-                console.log('YouTube unmuted');
-            } catch (e) {
-                console.log('YouTube unmute failed:', e);
-            }
-        }, 1000);
-    }
-
-
     // Toggle play/pause
     if (audioToggle) {
         audioToggle.addEventListener('click', function() {
-            if (isYouTube && youtubePlayer) {
-                // YouTube player
-                if (youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING) {
-                    youtubePlayer.pauseVideo();
-                } else {
-                    youtubePlayer.playVideo();
-                }
-            } else if (backgroundAudio) {
+            if (backgroundAudio) {
                 // Regular audio file
                 if (backgroundAudio.paused) {
                     backgroundAudio.play().catch(e => {
@@ -666,8 +506,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-        // Update icon for regular audio
-        if (backgroundAudio && !isYouTube) {
+        // Update icon for audio
+        if (backgroundAudio) {
             backgroundAudio.addEventListener('play', function() {
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'inline';
@@ -689,13 +529,9 @@ document.addEventListener('DOMContentLoaded', function() {
         volumeSlider.addEventListener('input', function() {
             const volume = parseInt(this.value);
 
-
-            if (isYouTube && youtubePlayer) {
-                youtubePlayer.setVolume(volume);
-            } else if (backgroundAudio) {
+            if (backgroundAudio) {
                 backgroundAudio.volume = volume / 100;
             }
-
 
             localStorage.setItem('audioVolume', this.value);
         });
@@ -710,13 +546,9 @@ document.addEventListener('DOMContentLoaded', function() {
             let newVolume = Math.max(0, currentVolume - 10);
             volumeSlider.value = newVolume;
 
-
-            if (isYouTube && youtubePlayer) {
-                youtubePlayer.setVolume(newVolume);
-            } else if (backgroundAudio) {
+            if (backgroundAudio) {
                 backgroundAudio.volume = newVolume / 100;
             }
-
 
             localStorage.setItem('audioVolume', newVolume);
         });
@@ -730,13 +562,9 @@ document.addEventListener('DOMContentLoaded', function() {
             let newVolume = Math.min(100, currentVolume + 10);
             volumeSlider.value = newVolume;
 
-
-            if (isYouTube && youtubePlayer) {
-                youtubePlayer.setVolume(newVolume);
-            } else if (backgroundAudio) {
+            if (backgroundAudio) {
                 backgroundAudio.volume = newVolume / 100;
             }
-
 
             localStorage.setItem('audioVolume', newVolume);
         });
