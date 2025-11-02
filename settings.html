@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Profile Editor</title>
+    <link rel="stylesheet" href="settings.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <h2>Admin Access</h2>
+            <p class="login-subtitle">Enter password to edit your profile</p>
+            <form id="login-form" onsubmit="event.preventDefault(); return false;">
+                    <input 
+                        type="password" 
+                        id="password-input" 
+                        class="password-input" 
+                        placeholder="Password"
+                        autocomplete="off"
+                    />
+                <button type="submit" id="login-btn" class="login-btn">Access Settings</button>
+                <p id="login-error" class="login-error"></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="settings-screen" class="settings-screen" style="display: none;">
+        <div class="settings-container">
+            <div class="settings-header">
+                <h1>Profile Settings</h1>
+                <a href="index.html" class="back-link">← Back to Profile</a>
+            </div>
+
+            <!-- Avatar Section -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <span class="section-icon">📷</span>
+                    <h2 class="section-title">Avatar</h2>
+                </div>
+                <div class="input-group">
+                    <label for="avatar-url">Avatar URL (GIFs & images)</label>
+                    <input 
+                        type="text" 
+                        id="avatar-url" 
+                        class="input-field" 
+                        placeholder="https://i.imgur.com/E3mBfMC.gif"
+                    />
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <span class="section-icon">👤</span>
+                    <h2 class="section-title">Info</h2>
+                </div>
+                <div class="input-group">
+                    <label for="username">Username/Handle</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        class="input-field" 
+                        placeholder="YourUsername"
+                    />
+                </div>
+                <div class="input-group">
+                    <label for="bio">Short Bio/Tagline</label>
+                    <input 
+                        type="text" 
+                        id="bio" 
+                        class="input-field" 
+                        placeholder="Your tagline, job, or cool stuff you do."
+                    />
+                </div>
+                <div class="input-group">
+                    <label for="location">Location</label>
+                    <input 
+                        type="text" 
+                        id="location" 
+                        class="input-field" 
+                        placeholder="📍 Your Location"
+                    />
+                </div>
+            </div>
+
+            <!-- Audio Section -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <span class="section-icon">🎵</span>
+                    <h2 class="section-title">Audio</h2>
+                </div>
+                <div class="input-group">
+                    <label for="audio-url">Song URL (YouTube link or MP3, OGG, etc.)</label>
+                    <input 
+                        type="text" 
+                        id="audio-url" 
+                        class="input-field" 
+                        placeholder="https://youtube.com/watch?v=... or https://example.com/song.mp3"
+                    />
+                </div>
+            </div>
+
+            <!-- Theme Section -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <span class="section-icon">🎨</span>
+                    <h2 class="section-title">Theme</h2>
+                </div>
+                <div class="input-group">
+                    <label for="accent-color">Accent Color</label>
+                    <div class="color-input-wrapper">
+                        <input 
+                            type="color" 
+                            id="accent-color" 
+                            class="color-input" 
+                            value="#6366f1"
+                        />
+                        <input 
+                            type="text" 
+                            id="accent-color-text" 
+                            class="input-field color-text-input" 
+                            placeholder="#6366f1"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Links Section -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <span class="section-icon">🔗</span>
+                    <h2 class="section-title">Links</h2>
+                </div>
+                <div id="links-container">
+                    <!-- Links will be dynamically added here -->
+                </div>
+                <button id="add-link-btn" class="add-link-btn">
+                    <span class="btn-icon">+</span>
+                    Add Link
+                </button>
+            </div>
+
+            <!-- Projects Section -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <span class="section-icon">🚀</span>
+                    <h2 class="section-title">Projects</h2>
+                </div>
+                <div id="projects-container">
+                    <!-- Projects will be dynamically added here -->
+                </div>
+                <button id="add-project-btn" class="add-link-btn">
+                    <span class="btn-icon">+</span>
+                    Add Project
+                </button>
+            </div>
+
+            <!-- Save Button -->
+            <div class="save-section">
+                <button id="save-btn" class="save-btn">Save Changes</button>
+                <p id="save-message" class="save-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+</html>
+

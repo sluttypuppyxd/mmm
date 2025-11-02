@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name - Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation"></div>
+    
+    <!-- Audio Player Controls -->
+    <div class="audio-player" id="audio-player" style="display: none;">
+        <button id="audio-toggle" class="audio-toggle" title="Play/Pause">
+            <span id="audio-play-icon">▶</span>
+            <span id="audio-pause-icon" style="display: none;">⏸</span>
+        </button>
+        <div class="audio-volume-control">
+            <button id="volume-down" class="volume-btn" title="Volume Down">🔉</button>
+            <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="50" />
+            <button id="volume-up" class="volume-btn" title="Volume Up">🔊</button>
+        </div>
+    </div>
+    
+    <audio id="background-audio" loop></audio>
+    <div id="youtube-player-container" style="display: none;"></div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    
+    <div class="container">
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <div class="avatar-container">
+                <div class="avatar-ring"></div>
+                <img id="avatar-img" class="avatar" src="" alt="Avatar" style="display: none;">
+                <div class="avatar avatar-fallback"></div>
+            </div>
+            <h1 class="name" id="profile-name">Your Name</h1>
+            <p class="bio" id="profile-bio">Your bio or tagline goes here. Keep it short and impactful.</p>
+            <div class="location-badge">
+                <span class="location-icon">📍</span>
+                <span class="location-text" id="profile-location">Location</span>
+            </div>
+        </div>
+
+        <!-- Links Section -->
+        <div class="links-section" id="links-container">
+            <!-- Links will be dynamically loaded here -->
+        </div>
+
+        <!-- Admin Link (hidden, access via URL or double-click) -->
+        <a href="settings.html" class="admin-link" title="Admin Settings">⚙️</a>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© Site made by @puppyterminal on discord.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
