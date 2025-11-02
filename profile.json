@@ -4,9 +4,21 @@
     "location": "Russia",
     "avatar": "https://i.pinimg.com/736x/a0/4a/79/a04a79ca4de9d0f66ab3b0e486bd7fe8.jpg",
     "icons": [
-      "https://i.pinimg.com/736x/0e/08/8d/0e088d1f80c3192a225cd0fba721c59d.jpg",
-      "https://i.pinimg.com/1200x/35/fc/04/35fc049057f902923a0cdcd9b28c5e59.jpg",
-      "https://i.pinimg.com/736x/dc/74/91/dc7491003f7842a8d4e473c10fc3d5cd.jpg",
-      "https://i.pinimg.com/736x/69/87/ad/6987ad113fa4ff282368638775fa879f.jpg"
+      {
+        "url": "https://github.com/",
+        "image": "https://i.pinimg.com/736x/0e/08/8d/0e088d1f80c3192a225cd0fba721c59d.jpg"
+      },
+      {
+        "url": "https://discord.gg/bedtime",
+        "image": "https://i.pinimg.com/1200x/35/fc/04/35fc049057f902923a0cdcd9b28c5e59.jpg"
+      },
+      {
+        "url": "https://catoftheday.com/",
+        "image": "https://i.pinimg.com/736x/dc/74/91/dc7491003f7842a8d4e473c10fc3d5cd.jpg"
+      },
+      {
+        "url": "https://wimg.rule34.xxx/",
+        "image": "https://i.pinimg.com/736x/69/87/ad/6987ad113fa4ff282368638775fa879f.jpg"
+      }
     ]
 }
