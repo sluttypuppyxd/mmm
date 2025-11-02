@@ -1,12 +1,8 @@
 // Enhanced smooth animations and interactions - GLOBAL PROFILE LOADER FIX
 
-
-
 document.addEventListener('DOMContentLoaded', function() {
     // GLOBAL profile loader - fetches from profile.json for all users
     loadProfileData();
-
-
 
     // Load profile data function
     async function loadProfileData() {
@@ -19,8 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Failed to fetch profile.json, falling back to localStorage:", err);
             profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
         }
-
-
 
         // Load avatar
         const avatarImg = document.getElementById('avatar-img');
@@ -40,16 +34,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-
-
-        // Load profile info (always update if data exists, even if empty)
+        // Load profile info
         const nameEl = document.getElementById('profile-name');
         const bioEl = document.getElementById('profile-bio');
         const locationEl = document.getElementById('profile-location');
 
-
         if (nameEl) {
-            // Check if name exists in profile.json
             nameEl.textContent = profileData.name || 'Your Name';
         }
         if (bioEl) {
@@ -59,15 +49,11 @@ document.addEventListener('DOMContentLoaded', function() {
             locationEl.textContent = profileData.location || 'Location';
         }
 
-
-
         // Load audio
-        const audioPlayer = document.getElementById('audio-player');
         const backgroundAudio = document.getElementById('background-audio');
+        const audioPlayer = document.getElementById('audio-player');
         if (profileData.audioUrl && profileData.audioUrl.trim()) {
             const audioUrl = profileData.audioUrl.trim();
-            
-            // Only treat as direct audio file (not YouTube)
             backgroundAudio.src = audioUrl;
             audioPlayer.style.display = 'flex';
             
@@ -79,8 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-
-
         // Apply accent color
         if (profileData.accentColor) {
             document.documentElement.style.setProperty('--accent', profileData.accentColor);
@@ -88,8 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.documentElement.style.setProperty('--accent-secondary', adjustBrightness(profileData.accentColor, -10));
             document.documentElement.style.setProperty('--accent-glow', profileData.accentColor + '40');
         }
-
-
 
         // Display global icons from profile.json with clickable links
         const linksContainer = document.getElementById('links-container');
@@ -106,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             profileData.icons.forEach((iconData) => {
                 const iconLink = document.createElement('a');
-                // Handle both old format (string) and new format (object with url and image)
                 const iconUrl = typeof iconData === 'string' ? iconData : iconData.image;
                 const linkUrl = typeof iconData === 'string' ? '#' : (iconData.url || '#');
                 
@@ -139,36 +120,19 @@ document.addEventListener('DOMContentLoaded', function() {
             linksContainer.appendChild(iconsRow);
         }
 
-
-
-        // Load links ONLY if there are no icons (icons take priority)
+        // Load links ONLY if there are no icons
         if (!hasIcons) {
             if (profileData.links && profileData.links.length > 0) {
                 profileData.links.forEach(link => {
                     const linkCard = createLinkCard(link.label, link.url, link.imageUrl);
                     linksContainer.appendChild(linkCard);
                 });
-            } else {
-                // Default links
-                const defaultLinks = [
-                    { label: 'GitHub', url: 'https://github.com/', icon: '🐙' },
-                    { label: 'Portfolio', url: '#', icon: '🌐' },
-                    { label: 'Email', url: 'mailto:', icon: '📧' }
-                ];
-                defaultLinks.forEach(link => {
-                    const linkCard = createLinkCard(link.label, link.url, null, link.icon);
-                    linksContainer.appendChild(linkCard);
-                });
             }
         }
-
-
 
         // Reinitialize animations for dynamically loaded content
         initAnimations();
     }
-
-
 
     // Helper function to adjust color brightness
     function adjustBrightness(hex, percent) {
@@ -179,26 +143,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return "#" + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
     }
 
-
-
     // Create link card element
     function createLinkCard(label, url, imageUrl = null, fallbackIcon = null) {
         const linkCard = document.createElement('a');
         linkCard.href = url === '#' ? '#' : url;
         linkCard.className = 'link-card';
         linkCard.target = url !== '#' ? '_blank' : '_self';
-        linkCard.title = label; // Use label as tooltip
-
+        linkCard.title = label;
 
         let cardContent = '';
 
-
-        // Use image if provided, otherwise use emoji icon
         if (imageUrl && imageUrl.trim()) {
             cardContent = `<img src="${imageUrl}" alt="${label}" class="link-card-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />`;
 
-
-            // Get fallback icon for error case
             if (!fallbackIcon) {
                 const iconMap = {
                     'GitHub': '🐙',
@@ -213,10 +170,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 fallbackIcon = iconMap[label] || '🔗';
             }
 
-
             cardContent += `<span class="link-card-fallback" style="display: none;">${fallbackIcon}</span>`;
         } else {
-            // No image, use emoji fallback
             if (!fallbackIcon) {
                 const iconMap = {
                     'GitHub': '🐙',
@@ -233,65 +188,29 @@ document.addEventListener('DOMContentLoaded', function() {
             cardContent = `<span class="link-card-fallback">${fallbackIcon}</span>`;
         }
 
-
-
         linkCard.innerHTML = cardContent;
-
-
-
         return linkCard;
     }
-
-
-
-    // Create project card element
-    function createProjectCard(title, description, icon, url) {
-        const projectCard = document.createElement('div');
-        projectCard.className = 'project-card';
-
-
-        projectCard.innerHTML = `
-            <div class="project-glow"></div>
-            <div class="project-icon">${icon || '🚀'}</div>
-            <h3 class="project-title">${title}</h3>
-            <p class="project-description">${description}</p>
-            <a href="${url || '#'}" class="project-link" target="_blank">
-                <span>View Project</span>
-                <span class="project-arrow">→</span>
-            </a>
-        `;
-
-
-
-        return projectCard;
-    }
-
-
 
     // Initialize animations for dynamically loaded content
     function initAnimations() {
         // Enhanced click ripple effect with glow
         const linkCards = document.querySelectorAll('.link-card');
 
-
         linkCards.forEach(card => {
             card.addEventListener('click', function(e) {
-                // Create ripple effect
                 const ripple = document.createElement('span');
                 const rect = this.getBoundingClientRect();
                 const size = Math.max(rect.width, rect.height) * 1.5;
                 const x = e.clientX - rect.left - size / 2;
                 const y = e.clientY - rect.top - size / 2;
 
-
                 ripple.style.width = ripple.style.height = size + 'px';
                 ripple.style.left = x + 'px';
                 ripple.style.top = y + 'px';
                 ripple.classList.add('ripple');
 
-
                 this.appendChild(ripple);
-
 
                 setTimeout(() => {
                     ripple.remove();
@@ -299,12 +218,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-
-
         // Mouse move parallax effect for avatar
         const avatar = document.querySelector('.avatar:not(.avatar-fallback)') || document.getElementById('avatar-img') || document.querySelector('.avatar');
         const avatarContainer = document.querySelector('.avatar-container');
-
 
         if (avatarContainer && avatar) {
             avatarContainer.addEventListener('mousemove', (e) => {
@@ -316,75 +232,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 const moveX = (x - centerX) / 15;
                 const moveY = (y - centerY) / 15;
 
-
                 avatar.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
             });
-
 
             avatarContainer.addEventListener('mouseleave', () => {
                 avatar.style.transform = 'translate(0, 0) scale(1)';
             });
         }
 
-
-
-        // Enhanced scroll animations
-        const observerOptions = {
-            threshold: 0.15,
-            rootMargin: '0px 0px -80px 0px'
-        };
-
-
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0) scale(1)';
-                    }, index * 100);
-                }
-            });
-        }, observerOptions);
-
-
-
-        // Observe project cards with stagger
-        const projectCards = document.querySelectorAll('.project-card');
-        projectCards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(30px) scale(0.95)';
-            card.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            observer.observe(card);
-        });
-
-
-
         // Smooth page load animation
         window.addEventListener('load', () => {
             document.body.style.opacity = '1';
         });
-
-
-
-        // Add floating animation to project icons
-        projectCards.forEach((card, index) => {
-            const icon = card.querySelector('.project-icon');
-            if (icon) {
-                setInterval(() => {
-                    icon.style.transform = `translateY(${Math.sin(Date.now() / 1000 + index) * 3}px)`;
-                }, 50);
-            }
-        });
     }
-
-
 
     // Call initAnimations
     initAnimations();
 });
-
-
 
 // Enhanced CSS for ripple and glow effects
 const style = document.createElement('style');
@@ -393,7 +257,6 @@ style.textContent = `
         position: relative;
         overflow: hidden;
     }
-
 
     .ripple {
         position: absolute;
@@ -404,7 +267,6 @@ style.textContent = `
         pointer-events: none;
         filter: blur(10px);
     }
-
 
     @keyframes ripple-animation {
         0% {
@@ -420,12 +282,6 @@ style.textContent = `
         }
     }
 
-
-
-    .project-icon {
-        transition: transform 0.3s ease !important;
-    }
-
     .icon-box {
         position: relative;
         overflow: hidden;
@@ -438,8 +294,6 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
-
-
 
 // Smooth scrolling enhancement
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -455,8 +309,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-
-
 // Audio player controls
 document.addEventListener('DOMContentLoaded', function() {
     const audioToggle = document.getElementById('audio-toggle');
@@ -467,29 +319,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const playIcon = document.getElementById('audio-play-icon');
     const pauseIcon = document.getElementById('audio-pause-icon');
 
-
-    // ===== AUTOPLAY WITH MUTED TRICK =====
+    // Unmute after autoplay starts
     if (backgroundAudio) {
-        // Muted autoplay (browsers allow this)
-        backgroundAudio.muted = true;
-        backgroundAudio.play().then(() => {
-            // Playback started, now unmute
-            backgroundAudio.muted = false;
-            playIcon.style.display = 'none';
-            pauseIcon.style.display = 'inline';
-            console.log('Audio autoplay successful!');
-        }).catch(e => {
-            console.log('Autoplay failed, waiting for user interaction:', e);
-            backgroundAudio.muted = false;
-        });
+        // Wait for audio to be ready, then unmute
+        backgroundAudio.addEventListener('play', function() {
+            // Give it a moment to start playing
+            setTimeout(() => {
+                backgroundAudio.muted = false;
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'inline';
+            }, 100);
+        }, { once: true });
     }
-
 
     // Toggle play/pause
     if (audioToggle) {
         audioToggle.addEventListener('click', function() {
             if (backgroundAudio) {
-                // Regular audio file
                 if (backgroundAudio.paused) {
                     backgroundAudio.play().catch(e => {
                         console.error('Error playing audio:', e);
@@ -504,8 +350,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-
-
         // Update icon for audio
         if (backgroundAudio) {
             backgroundAudio.addEventListener('play', function() {
@@ -513,16 +357,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 pauseIcon.style.display = 'inline';
             });
 
-
-
             backgroundAudio.addEventListener('pause', function() {
                 playIcon.style.display = 'inline';
                 pauseIcon.style.display = 'none';
             });
         }
     }
-
-
 
     // Volume slider
     if (volumeSlider) {
@@ -536,8 +376,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('audioVolume', this.value);
         });
     }
-
-
 
     // Volume buttons
     if (volumeDown && volumeSlider) {
@@ -553,8 +391,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('audioVolume', newVolume);
         });
     }
-
-
 
     if (volumeUp && volumeSlider) {
         volumeUp.addEventListener('click', function() {
