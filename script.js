@@ -102,9 +102,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+        // Display global icons from profile.json
+        if (profileData.icons && Array.isArray(profileData.icons) && profileData.icons.length > 0) {
+            const container = document.getElementById('links-container');
+            const iconsRow = document.createElement('div');
+            iconsRow.style.display = 'flex';
+            iconsRow.style.gap = '15px';
+            iconsRow.style.justifyContent = 'center';
+            iconsRow.style.marginBottom = '20px';
+            iconsRow.style.flexWrap = 'wrap';
+            
+            profileData.icons.forEach((iconUrl) => {
+                const iconLink = document.createElement('a');
+                iconLink.href = '#';
+                iconLink.className = 'icon-box';
+                iconLink.style.width = '50px';
+                iconLink.style.height = '50px';
+                iconLink.style.borderRadius = '10px';
+                iconLink.style.overflow = 'hidden';
+                iconLink.style.display = 'flex';
+                iconLink.style.alignItems = 'center';
+                iconLink.style.justifyContent = 'center';
+                iconLink.style.backgroundColor = 'rgba(255,255,255,0.1)';
+                iconLink.style.transition = 'all 0.3s ease';
+                
+                const img = document.createElement('img');
+                img.src = iconUrl;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.alt = 'Icon';
+                
+                iconLink.appendChild(img);
+                iconsRow.appendChild(iconLink);
+            });
+            
+            container.insertBefore(iconsRow, container.firstChild);
+        }
+
+
+
         // Load links
         const linksContainer = document.getElementById('links-container');
-        linksContainer.innerHTML = '';
+        // Only clear if we haven't already added icons
+        const existingIcons = linksContainer.querySelector('div[style*="gap: 15px"]');
+        if (!existingIcons) {
+            linksContainer.innerHTML = '';
+        }
 
 
         if (profileData.links && profileData.links.length > 0) {
@@ -387,6 +431,16 @@ style.textContent = `
 
     .project-icon {
         transition: transform 0.3s ease !important;
+    }
+
+    .icon-box {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .icon-box:hover {
+        transform: scale(1.1);
+        background-color: rgba(255,255,255,0.2) !important;
     }
 `;
 document.head.appendChild(style);
